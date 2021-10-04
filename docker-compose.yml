@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "umarabox"
+      MONGO_INITDB_ROOT_PASSWORD: "secret"
+      MONGO_INITDB_ROOT_DATABASE: "db"
+    networks:
+      - mynet
+    volumes:
+      - /home/umarbox/Documents/unicoms_auth/storage:/data/db
+
+  unicoms:
+    image: umarabox/unicoms_auth
+    restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - "9000:9000"
+    environment:
+      MONGO_INTDB_ROOT_USERNAME: "umarabox"
+      MONGO_INITDB_ROOT_PASSWORD: "secret"
+      MONGO_INITDB_ROOT_DATABASE: "db"
+    networks:
+      - mynet 
+networks:
+  mynet:
+    driver: bridge
